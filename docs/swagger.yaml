@@ -1,0 +1,219 @@
+definitions:
+  handlers.SongApi:
+    properties:
+      group:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      releaseDate:
+        type: string
+      song:
+        type: string
+    type: object
+  handlers.changeResponse:
+    properties:
+      id:
+        type: integer
+      message:
+        type: string
+    type: object
+  handlers.postResponse:
+    properties:
+      link:
+        type: string
+      releaseDate:
+        type: string
+      text:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /couplets:
+    get:
+      description: получить куплеты
+      parameters:
+      - description: ID песни
+        in: query
+        name: song_id
+        required: true
+        type: integer
+      - description: номер куплета
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Get Couplets
+      tags:
+      - Couplets
+  /info:
+    get:
+      description: Возвращает информацию о конкретной песне по её ID.
+      parameters:
+      - description: ID песни
+        in: query
+        name: song_id
+        required: true
+        type: integer
+      - description: название группы
+        in: query
+        name: group
+        required: true
+        type: string
+      - description: название песни
+        in: query
+        name: song
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SongApi'
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              $ref: '#/definitions/handlers.SongApi'
+            type: array
+      summary: Получить информацию о песне
+  /songs:
+    delete:
+      description: Удалить песню
+      parameters:
+      - description: ID песни для удаления
+        in: body
+        name: song_id
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.changeResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete Songs
+      tags:
+      - songs
+    get:
+      description: Получить список песен с фильтрацией
+      parameters:
+      - description: Фильтр по названию группы
+        in: query
+        name: group
+        type: string
+      - description: Фильтр по названию песни
+        in: query
+        name: song
+        type: string
+      - description: лимит
+        in: query
+        name: limit
+        type: integer
+      - description: страница
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SongApi'
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              $ref: '#/definitions/handlers.SongApi'
+            type: array
+      summary: Get Songs
+      tags:
+      - songs
+    patch:
+      description: обновить песню
+      parameters:
+      - description: ID песни для обновления
+        in: body
+        name: song_id
+        required: true
+        schema:
+          type: integer
+      - description: название группы для обновления
+        in: body
+        name: group
+        schema:
+          type: integer
+      - description: название песни для обновления
+        in: body
+        name: song
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.changeResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Patch Songs
+      tags:
+      - songs
+    post:
+      description: добавить песню
+      parameters:
+      - description: название группы
+        in: body
+        name: group
+        required: true
+        schema:
+          type: integer
+      - description: название песни
+        in: body
+        name: song
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.postResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Post Songs
+      tags:
+      - songs
+swagger: "2.0"
